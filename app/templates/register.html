@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>會員註冊</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 10px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background-color: #28a745; /* 綠色 */
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      button:last-child {
+        background-color: #dc3545; /* 紅色 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>會員註冊</h1>
+      <div id="error-message"></div>
+
+      <form id="registration-form">
+        <label for="username">帳號：</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">密碼：</label>
+        <input type="password" id="password" name="password" required />
+
+        <label for="confirm-password">重複密碼：</label>
+        <input
+          type="password"
+          id="confirm-password"
+          name="confirm-password"
+          required
+        />
+
+        <label for="name">姓名：</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">信箱：</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="address">地址：</label>
+        <input type="text" id="address" name="address" required />
+
+        <label for="phone">手機號碼：</label>
+        <input type="tel" id="phone" name="phone" required />
+        <button type="button" onclick="registerUser()">註冊</button>
+        <button type="button" onclick="goToHomePage()">返回主頁</button>
+      </form>
+    </div>
+
+    <script>
+      function registerUser() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm-password").value;
+        var name = document.getElementById("name").value;
+        var email = document.getElementById("email").value;
+        var address = document.getElementById("address").value;
+        var phone = document.getElementById("phone").value;
+
+        if (
+          username === "" ||
+          password === "" ||
+          confirmPassword === "" ||
+          name === "" ||
+          email === "" ||
+          address === "" ||
+          phone === ""
+        ) {
+          document.getElementById("error-message").innerHTML =
+            "請填寫所有必填欄位。";
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          document.getElementById("error-message").innerHTML =
+            "密碼和確認密碼不相符。";
+          return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "{{ url_for('member_register') }}", true);
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+
+        var data =
+          "username=" +
+          encodeURIComponent(username) +
+          "&password=" +
+          encodeURIComponent(password) +
+          "&confirm-password=" +
+          encodeURIComponent(confirmPassword) +
+          "&name=" +
+          encodeURIComponent(name) +
+          "&email=" +
+          encodeURIComponent(email) +
+          "&address=" +
+          encodeURIComponent(address) +
+          "&phone=" +
+          encodeURIComponent(phone);
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = xhr.responseText;
+            if (response === "註冊成功") {
+              alert("註冊成功");
+            } else {
+              document.getElementById("error-message").innerHTML = response;
+            }
+          }
+        };
+
+        xhr.send(data);
+      }
+
+      function goToHomePage() {
+        window.location.href = "{{ url_for('home') }}";
+      }
+    </script>
+  </body>
+</html>

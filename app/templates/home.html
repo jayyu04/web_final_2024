@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>購物主頁</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      header {
+        padding: 20px;
+        text-align: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      nav li {
+        display: inline-block;
+        margin-right: 20px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>歡迎來到我們的購物網站</h1>
+      <nav>
+        <ul>
+          {% if not logged_in %}
+          <li><a href="{{ url_for('login') }}">會員登入</a></li>
+          <li><a href="{{ url_for('register') }}">會員註冊</a></li>
+          <li><a href="{{ url_for('admin_page') }}">管理員頁面</a></li>
+          {% else %}
+          <li><a href="{{ url_for('logout') }}">會員登出</a></li>
+          <li><a href="{{ url_for('store') }}">商品頁面</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- 主要內容放在這裡 -->
+      <p>這裡放一些主要的購物內容，比如最新商品、促銷活動等。</p>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 購物網站. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

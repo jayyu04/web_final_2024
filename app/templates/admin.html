@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管理員頁面</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      header {
+        padding: 20px;
+        text-align: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      nav li {
+        display: inline-block;
+        margin-right: 20px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #fff;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>管理員頁面</h1>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('home') }}">首頁</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h2>訂單訊息</h2>
+      <table>
+        <tr>
+          <th>訂單編號</th>
+          <th>會員名稱</th>
+          <th>會員地址</th>
+          <th>會員電話</th>
+          <th>商品名稱</th>
+          <th>商品價格</th>
+          <th>商品數量</th>
+          <th>總價</th>
+          <th>訂單日期</th>
+        </tr>
+
+        {% for order, user, product in orders %}
+        <tr>
+          <td>{{ order.order_id }}</td>
+          <td>{{ user.member_name }}</td>
+          <td>{{ user.member_address }}</td>
+          <td>{{ user.member_phone }}</td>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.product_price }}</td>
+          <td>{{ order.product_amount }}</td>
+          <td>{{ order.total_price }}</td>
+          <td>{{ order.order_date }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </main>
+  </body>
+</html>

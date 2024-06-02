@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #333;
+        border-radius: 10px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background-color: #28a745; /* 綠色 */
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      button:last-child {
+        background-color: #dc3545; /* 紅色 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>登入</h1>
+      <form id="login-form" method="POST" action="{{ url_for('login') }}">
+        <label for="username">帳號:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">密碼:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="button" onclick="loginUser()">登入</button>
+        <button type="button" onclick="goToHomePage()">返回主頁</button>
+      </form>
+
+      <div id="result-message"></div>
+    </div>
+
+    <script>
+      function loginUser() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        // 使用 XMLHttpRequest 或 Fetch API 將資料發送到伺服器端
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "{{ url_for('login') }}", true);
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/x-www-form-urlencoded"
+        );
+
+        // 將資料格式化為 URL-encoded 字符串
+        var data =
+          "username=" +
+          encodeURIComponent(username) +
+          "&password=" +
+          encodeURIComponent(password);
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              // 伺服器回應成功
+              var response = JSON.parse(xhr.responseText);
+
+              // 根據回應顯示結果
+              if (response === "success") {
+                document.getElementById("result-message").innerHTML =
+                  "Login successful!";
+                goToHomePage();
+              } else {
+                document.getElementById("result-message").innerHTML =
+                  "Login failed. Please check your username and password.";
+              }
+            } else {
+              // 伺服器回應錯誤
+              document.getElementById("result-message").innerHTML =
+                "An error occurred.";
+            }
+          }
+        };
+
+        // 發送資料
+        xhr.send(data);
+      }
+
+      function goToHomePage() {
+        // 將網頁跳轉到 Flask 的 home 路由
+        window.location.href = "{{ url_for('home') }}";
+      }
+    </script>
+  </body>
+</html>

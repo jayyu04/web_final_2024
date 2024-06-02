@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品頁面</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      header {
+        padding: 20px;
+        text-align: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      nav li {
+        display: inline-block;
+        margin-right: 20px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #fff;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>商品列表</h1>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('home') }}">首頁</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <table>
+        <tr>
+          <th>商品名稱</th>
+          <th>商品價格</th>
+          <th>商品數量</th>
+          <th>操作</th>
+        </tr>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.product_price }}</td>
+          <td>
+            <input
+              type="number"
+              name="quantity"
+              id="quantity_{{ product.id }}"
+              value="1"
+            />
+          </td>
+          <td>
+            <button
+              onclick="checkout({{ product.id }}, {{ product.product_price }})"
+            >
+              購買
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </main>
+    <footer>
+      <p>&copy; 2024 購物網站. All rights reserved.</p>
+    </footer>
+
+    <script>
+      function checkout(productId, productPrice) {
+        // 获取购买数量
+        var quantity = document.getElementById("quantity_" + productId).value;
+
+        // 获取会员ID
+        var member_id = "{{ member_id }}";
+
+        // 获取当前日期
+        var orderDate = new Date().toISOString().slice(0, 10);
+
+        // 计算总价
+        var totalPrice = quantity * productPrice;
+
+        // 发送 AJAX 请求将数据写入数据库
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            // 处理响应
+            console.log(this.responseText);
+          }
+        };
+
+        // 修改為POST請求
+        xhttp.open("POST", "{{ url_for('checkout') }}", true);
+        xhttp.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        var params =
+          "member_id=" +
+          member_id +
+          "&product_id=" +
+          productId +
+          "&order_date=" +
+          orderDate +
+          "&product_amount=" +
+          quantity +
+          "&total_price=" +
+          totalPrice;
+        xhttp.send(params);
+      }
+    </script>
+  </body>
+</html>
